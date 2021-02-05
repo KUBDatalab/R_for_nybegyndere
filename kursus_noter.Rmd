@@ -1,0 +1,383 @@
+---
+title: "R for absolutte nybegyndere"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+
+
+
+# Setup af R/Rstudio
+
+Hvis vi bare starter R, får vi en dum kommandolinie. Eller, dum er den ikke, den er utroligt effektiv. Men ikke specielt venlig. Derfor arbejder vi i RStudio. Det er stadig ikke helt let. Men meget lettere end alternativet.
+
+Det betyder at vi skal have installeret to programmer. R og RStudio. Og det skal ske i den rækkefølge. 
+
+R downloades og installeres fra https://cran.r-project.org/
+Når det er gjort, installerer man RStudio fra https://rstudio.com/products/rstudio/download/
+
+Bare vælg den gratis desktop udgave.
+
+I dette kursus arbejder vi dog i en online-udgave. Den findes på https://rstudio.cloud/. Det er gratis at oprette sig.
+
+## Intro til R-studio
+
+Øverste venstre panel er der ikke nødvendigvis fra start. Det er der vi skriver vores kode. Og kode er bare tekst, der beskriver at "først sker det her, så sker det her bagefter og så fortsætter vi med...". Vi kan gemme koden som en fil. Det betyder at vi kan genbruge koden.
+Hvis panelet ikke er der fra start, er det fordi vi ikke har åbnet en ny fil. Vælg "File" -< "New File" -> "R Script".
+
+Panelet nedenunder, nederst til venstre, indeholder vores konsol. Det er R i sin rene form. Vi kan skrive kommandoer dernede, fra "1 + 1" til mere komplekse ting. Og når vi taster ctrl+enter, eksekveres koden. Det kan være nyttigt nok. Og det er også der vi ser resultatet af koden. 
+
+Øverst til højre har vi et panel der har flere funktioner. Primært "Environment". Når vi om lidt introducerer fænomenet variable, er det deroppe vi kan se dem. Der er også adgang til historikken - alle de kommandoer vi har kørt. 
+
+Nederst til højre har vi også et panel der kan flere forskellige ting. Et faneblad med vores filer, et med de plots vi får lavet, og vigtigst (!) adgangen til hjælpefunktionen. Den får vi ofte brug for.
+
+# Intro til R. 
+
+Vi kan få resultater fra R ved at taste matematik ind i konsollen:
+```{r}
+3 + 5
+```
+Det er en `kommando` til R. Og det er fint. Men vi skal lave andet end at lægge tal sammen. Meget andet. Og derfor er det en bedre ide at skrive vores kommandoer, vores kode, i et script.
+Så har vi nemlig alle vores kommandoer samlet et sted. Vi kan gemme dem så vi kan gøre det samme en gang til. Eller 100 gange til. Og vi kan dokumentere at vi har gjort tingene i den rigtige rækkefølge. Så vi starter et script op, og skriver der. Skal vi bare køre en enkelt af linierne i vores script, stiller vi cursoren på den linie, og trykker ctrl+enter. Vi kan også markere mere end en linie og køre dem. Eller gå op i menuen, vælge "Code" -> "Run Region" og vælge en af mulighederne der.
+
+Det kan være nyttigt at gemme værdier i variable:
+```{r}
+income <- 100000
+```
+
+<- er vores assignment operator. Det er den vi bruger for at gemme værdien 100.000 i variablen "indkomst". 
+Man kan bruge "=". Det bør man lade være med, for den bruges på e
+
+Nu kan vi lave matematik på den variabel:
+```{r}
+income/12
+```
+
+Læg mærke til at kommatal i R angives med "." i stedet for ","
+
+Vi kan gemme resultatet i en ny variabel:
+```{r}
+income_pr_month <- income/12
+```
+
+Og vi kan ændre på værdien i indkomst:
+```{r}
+income <- income/7.5
+income/12
+```
+
+Hvad er værdien af `income_pr_month` nu?
+
+## funktioner
+En funktion tager noget input, og returnerer noget output.
+
+Her er et eksempel:
+```{r}
+round(3.14159)
+```
+
+Den tager et tal, og afrunder det. Og vi får tre, fordi default rundes der af til det nærmeste hele tal. Hvis vi vil have flere decimaler må vi kigge nærmere på `round` funktionen:
+```{r}
+args(round)
+```
+
+Vi kan også skrive ?round - så får vi hjælpefunktionen. Det er ofte mere forståeligt.
+
+Vi kan se at der en parameter der hedder digits. Og den er lig 0. Det er defaultværdien for den parameter.
+
+Hvis vi prøver at pille ved det der 0:
+
+```{r}
+round(3.14159, digits=2)
+```
+
+digits er en parameter til funktionen - der specificerer hvordan funktionen skal udføre hvad den nu gør.
+
+Der er MANGE funktioner i R. Vi ser på dem undervejs.
+
+##  vektorer og Datatyper
+
+Vektorer består er en række værdier. En eller flere. Det kan være tal. Det kan være tegn. 
+
+Vi kan lave dem ved at bruge `c()` funktionen. Hvis vi har været ude og interviewe, har vi måske noteret os hvor mange beboere der er i en given husholdning:
+
+```{r}
+hh_members <- c(3, 7, 10, 6)
+hh_members
+```
+
+Vi er i et udviklingsland, så vi har også noteret os hvad husets vægge er lavet af:
+
+```{r}
+respondent_wall_type <- c("muddaub", "burntbricks", "sunbricks")
+respondent_wall_type
+```
+
+Anførselstegnene er det der angiver at der er tale om tekst. Ellers ville R antage at `muddaub` var en variabel.
+
+Hvor mange elementer er der i en vektor? Det er der en funktion til:
+```{r}
+length(respondent_wall_type)
+```
+
+Vektorer kan kun indeholde elementer der har samme type. Eller på programmeringssprog - klasse. Hvis vi vil vide hvilken type data en vektor indeholder har vi en funktion: 
+
+```{r}
+class(hh_members)
+```
+```{r}
+class(respondent_wall_type)
+```
+
+Der er andre datatyper.
+
+```{r echo=T}
+class(1L)
+```
+
+
+```{r}
+class(42.47)
+```
+
+
+```{r}
+class(T)
+```
+
+
+```{r}
+class("noget tekst")
+```
+
+## subsetting vektorer
+
+Eller på dansk - trække delmængder ud af vektorer. Men det er nyttigt at vide at det på engelsk kaldes subsetting - det gør det lettere at google.
+
+Element nr to i `respondent_wall_type`:
+```{r}
+respondent_wall_type[2]
+```
+
+Elementerne nr. tre og to i samme vektor:
+```{r}
+respondent_wall_type[c(3,2)]
+```
+
+Element nr. tre, to, tre og et:
+```{r}
+respondent_wall_type[c(3,2,3,1)]
+```
+
+Vi tæller fra nr. 1. Fordi mennesker tæller fra nummer 1. Andre programmeringssprog tæller fra 0. Fordi computere tæller fra nummer nul.
+
+
+Vi kan også bruge logiske, sand/falsk, værdier til at trække data ud:
+```{r}
+hh_members[c(TRUE, FALSE, TRUE, TRUE)]
+```
+
+Det er superbesværligt at sidde og lave vektorer med sand/falsk værdier i. Det er lettere at få computeren til at gøre det for en.
+```{r}
+hh_members > 5
+```
+
+Her tester vi hvert element i vektoren, om det er større end 5. 
+
+Det resultat kan vi bruge til at trække elementer ud af vektoren:
+```{r}
+hh_members[hh_members > 5]
+
+```
+
+Vi kan kombinere forskellige tests. `&` (begge betingelser er sande. AND), og `|` mindst en af betingelserne er sand. OR.
+
+```{r}
+hh_members[hh_members < 4 | hh_members > 7]
+```
+
+Ofte har vi brug for at søge efter bestemte strenge i en vektor. Det kunne man gøre ved at hægte søgekriterier sammen med `|`:
+
+```{r}
+respondent_wall_type[respondent_wall_type == "muddaub" | respondent_wall_type == "sunbricks"]
+```
+
+Det er bare lidt bøvlet. Det her er en genvej:
+```{r}
+respondent_wall_type %in% c("muddaub", "sunbricks")
+```
+
+Her kan vi eventuelt tage en afstikker, og se på stringr.
+
+## Hvad hvis der mangler data? 
+R bruger en særlig værdi, NA, til at registrere at der mangler data.
+
+Lad os lave en vektor der indeholder et manglende værdi:
+
+```{r}
+rooms <- c(2, 1, 1, NA, 4)
+rooms
+```
+
+Der sker særlige ting når vi bruger funktioner på manglende værdier:
+```{r}
+mean(rooms)
+```
+
+Det kan vi gøre noget ved:
+```{r}
+mean(rooms, na.rm=T)
+```
+
+Bemærk at vi ikke behøver skrive TRUE. Vi kan nøjes med T.
+
+Hvis du har data med mangler - kan det være nyttigt at kende disse funktioner:
+```{r}
+is.na(rooms)
+na.omit(rooms)
+complete.cases(rooms)
+```
+
+## Hvad er dataframes?
+
+
+Det er fint at have vektorer. Men måske ikke så supernyttigt. Oftest har vi data i tabeller:
+```{r, echo=F}
+knitr::kable(dplyr::sample_n(iris,5))
+```
+
+
+
+Den datastruktur vi kommer til at arbejde mest med hedder en dataframe. Det er sådan en vi har et udsnit af ovenfor. Den er formatteret til at se pæn ud. Oftere ser det sådan her ud:
+```{r}
+head(iris)
+```
+
+
+##  Hvad er en dataframe - sådan lidt mere teknisk?
+
+En dataframe - undertiden optræder den i en variant med navnet tibble - er basalt set en liste af vektorer med ens længde. Hvert element i listen er en kolonne - som altså er en vektor.
+
+Vi har ikke set på lister - et eller andet sted er vi nødt til at begrænse os.
+
+
+##  Indlæsning af csv til R
+Man kan lave en dataframe "i hånden". Man kan også bruge de indbyggede datasæt der er i R. Oftere har vi mere glæde af at indlæse data fra en ekstern kilde, i en dataframe.
+
+Det er ikke det der er målet her. Og der er mange detaljer man kan dykke ned i.
+
+Men for lige at give en demo:
+```{r eval=F}
+data <- read.csv("https://github.com/KUBDatalab/R_for_nybegyndere/raw/main/SAFI_clean.csv")
+```
+
+Kommaseparerede filer er ikke specielt praktiske på dansk - for vi bruger kommaer i tal. I stedet arbejder vi med semikolon-separerede filer. `read.csv2()` er en variant af `read.csv()` der bruger semikoloner i stedet for kommaer. 
+
+Der er biblioteker der har funktioner til at indlæse excel filer. Og SPSS-filer. Og alt muligt andet. 
+
+
+
+
+## Hvordan arbejder man med dataframes?
+Vi ser på mtcars dataframen
+
+```{r}
+mtcars
+dim(mtcars)
+nrow(mtcars)
+ncol(mtcars)
+head(mtcars)
+tail(mtcars)
+```
+
+subsetting med kantede paranteser. Række før kommaet, kolonnnen efter.
+
+subsetting med $
+
+Bøvlet!
+```{r}
+mtcars[mtcars$mpg>20,]
+```
+
+lettere. pakker - med funktioner. Der kan installeres. Og indlæses.
+```{r eval=F}
+install.packages("tidyverse")
+install.packages("rlang")
+library(dplyr)
+```
+
+
+```{r}
+library(dplyr)
+filter(mtcars, mpg>20)
+```
+
+```{r}
+select(mtcars, cyl)
+```
+
+```{r}
+temp <- filter(mtcars, mpg>20)
+temp2 <- select(temp, cyl)
+```
+Det ville dog være fikst hvis man kunne gøre først det ene og så det andet - uden at skulle have de der mellem-variable. Den ide har andre fået.
+
+pipen!
+
+%>% 
+
+```{r}
+mtcars %>% filter(mpg>20) %>% 
+  select(cyl, mpg, hp) %>% 
+  mutate(tal = mpg/hp) %>% 
+  summarise(middel_mpg = mean(mpg))
+```
+
+```{r}
+mtcars %>% select(cyl, mpg) %>% 
+  filter(cyl == 8) %>% 
+  summarise(middel_mpg_cyl_6 = mean(mpg),
+            sd_det_samme = sd(mpg))
+```
+og for 4 og for 6 cylindere. Det kan gøres i et hug, hvis vi starter med at gruppere dataframen:
+
+```{r}
+mtcars %>% select(cyl, mpg) %>% 
+  group_by(cyl) %>% 
+  summarise(middel_mpg = mean(mpg))
+```
+
+Hvad med plot?
+
+```{r}
+library(ggplot2)
+ggplot(data=mtcars, mapping=aes(x=hp, y = mpg, color=factor(cyl))) +
+  geom_point()
+```
+
+Statistik.
+
+Vi har allerede mødt middelværdier. Og standardafvigelser.
+Vi har endda set hvordan vi kan beregne den slags for forskellige grupper i vores datasæt. 
+
+Når jeg ser på plottet - kan jeg godt få den tanke, at der er en sammenhæng mellem brændstoføkonomi og hestekræfter. 
+
+Jeg kunne finde på at gætte på en lineær sammenhæng. Hvordan finder vi sådan en?
+
+```{r}
+library(dplyr)
+lm(mpg~hp, mtcars) %>% 
+  summary
+```
+
+
+```{r}
+library(ggplot2)
+ggplot(mtcars, mapping=aes(x=hp, y=mpg)) +
+  geom_point() +
+  geom_smooth(method="lm", formula=y~x)
+```
+
